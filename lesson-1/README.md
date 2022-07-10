@@ -1,21 +1,30 @@
 ### Report of queries
 ---
 #### Creating a user
+```postgresql
 - sudo -u postgres createuser intern -d -r -P;
 - sudo psql -U intern -d postgres -h localhost; *password:123*
+```
 #### Creating a database
+```postgresql
 - create database market;
+```
 #### Creating a table of users
+```postgresql
 - create table users (id bigserial PRIMARY KEY,
 	name varchar(100),
 	email varchar(100) UNIQUE not null,
 	password varchar(200),
 	birth_date date not null,
 	created_at timestamp not null);
+```
 #### Adding users to table
+```postgresql
 - insert into users (name, email,password, birth_date, created_at)
 	values ('Liam', 'liam@gmail.com', '48g4958j4ofw', '2000-12-04', date_trunc('seconds', now()::timestamp));
+```
 #### Creating a table of products with relations and owner
+```postgresql
 - create table owners (id serial PRIMARY KEY, name varchar(100), phone varchar(15) UNIQUE not null, created_at timestamp not null);
 - create table products (id bigserial PRIMARY KEY,
 	name varchar(255) not null,
@@ -32,7 +41,9 @@
 - insert into owners (name, phone, created_at)
 	VALUES ('Ashlay', '(050) 234-23-46', date_trunc('seconds', now()::timestamp)),
 	('Carl', '(063) 642-23-46', date_trunc('seconds', now()::timestamp));
+```
 #### Adding a few products
+```postgresql
 - insert into products (name,description,price,created_at, owner_id)
 	values ('Iphone','some description', 439.99,date_trunc('seconds', now()::timestamp),1),
 	('Mac mini','some description', 759.99,date_trunc('seconds', now()::timestamp),2),
@@ -47,8 +58,13 @@
 	(1,2,date_trunc('seconds', now()::timestamp)),
 	(2,3,date_trunc('seconds', now()::timestamp)),
 	(2,4,date_trunc('seconds', now()::timestamp));
+```
 #### Deleting an owner
+```postgresql
 - delete from owners where id=2;
+```
 #### Adding an age restriction
+```postgresql
 - delete from users where name='Liam';
 - alter table users add check (date_part('year', age(birth_date)) >= 18);
+```
