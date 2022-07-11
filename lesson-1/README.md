@@ -68,3 +68,18 @@
 - delete from users where name='Liam';
 - alter table users add check (date_part('year', age(birth_date)) >= 18);
 ```
+#### Adding an owner
+```postgresql
+- insert into owners (name, phone, created_at)
+	VALUES ('Carl', '(063) 642-23-46', date_trunc('seconds', now()::timestamp));
+```
+#### Adding a few products
+```postgresql
+- insert into products (name,description,price,created_at, owner_id)
+	values ('Iphone','some description', 439.99,date_trunc('seconds', now()::timestamp),5),
+	('Apple iPhone XS','some description', 129.99,date_trunc('seconds', now()::timestamp),5);
+```
+#### Change of product owners
+```postgresql
+- update products set owner_id = CASE WHEN owner_id = 1 THEN 5 ELSE 1 END;
+```
