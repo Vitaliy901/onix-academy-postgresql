@@ -9,6 +9,10 @@
 ```postgresql
 - create database market;
 ```
+#### Сhanging the database
+```postgresql
+- \с market;
+```
 #### Creating a table of users
 ```postgresql
 - create table users (id bigserial PRIMARY KEY,
