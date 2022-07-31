@@ -18,12 +18,12 @@
 	- минус 20% на первый заказ, тип "one-time";
 	- минус 5% на все заказы, тип "bulk";
 	- минус 10% на все заказы, тип "bulk".
-	
+
 ```postgresql
-		INSERT INTO discounts (type,amount)
-		VALUES ('one-time', 20),
-		('bulk', 5),
-		('bulk', 10);
+	INSERT INTO discounts (type,amount)
+	VALUES ('one-time', 20),
+	('bulk', 5),
+	('bulk', 10);
 ```
 4. Вывести список всех пользователей и количество их заказов (users.id, users.name, orders_quantity) c помощью джойна:
 
