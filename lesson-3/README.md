@@ -173,14 +173,14 @@ psql -U intern -d db_lesson_3 -h localhost
 
 18. история заказов: вывести список записей вида: имя пользователя, id заказа, дата заказа, тотал - сумма стоимости всех товаров в заказе (нужно учитывать, что в заказе бывает несколько единиц одного товара)
 
-		SELECT u.name, o.id, o.order_date, SUM(p.price * op.quantity) AS amaunt FROM users AS u
+		SELECT u.name, o.id, o.order_date, SUM(p.price * op.quantity) AS amount FROM users AS u
 		INNER JOIN orders AS o ON u.id = o.user_id
 		INNER JOIN orders_products AS op ON o.id = op.order_id
 		INNER JOIN products AS p ON op.product_id = p.id GROUP BY u.name, o.id, o.order_date ORDER BY o.order_date DESC;
 
 19. считаем деньги: вывести список записей вида: имя пользователя, сумма всех заказов пользователя.
 
-		SELECT u.name, SUM(p.price * op.quantity) AS amaunt FROM users AS u
+		SELECT u.name, SUM(p.price * op.quantity) AS amount FROM users AS u
 		INNER JOIN orders AS o ON u.id = o.user_id
 		INNER JOIN orders_products AS op ON o.id = op.order_id
 		INNER JOIN products AS p ON op.product_id = p.id GROUP BY u.name;
