@@ -26,7 +26,7 @@
 		INNER JOIN (SELECT DISTINCT user_id, MAX(quantity) OVER (PARTITION BY user_id) AS orders_quantity FROM (SELECT DISTINCT user_id, COUNT(user_id) OVER (PARTITION BY user_address_id) AS quantity FROM orders) as uq) AS uq ON uq.user_id = ua.user_id AND uq.orders_quantity = ua.orders_quantity
 		INNER JOIN temp ON temp.user_address_id = id;
 
----
+		---
 
 		CREATE MATERIALIZED VIEW final_user_address_mview AS
 		WITH temp2 AS (SELECT uav.id, uav.address, uav.state, uav.postcode, uav.user_id, uav.amount, o.order_date FROM user_address_view AS uav
@@ -44,7 +44,8 @@
 		WHERE id IN (SELECT DISTINCT MAX(id) OVER (PARTITION BY user_id) AS id FROM user_addresses
 		WHERE user_id NOT IN (SELECT DISTINCT user_id FROM orders))) AS address ON address.user_id = users.id;
 
----
+		---
+
 		ALTER TABLE users ADD address varchar(255), ADD state varchar(20), ADD postcode varchar(5);
 
 		WITH insert_table AS (SELECT fu1.id, fu1.name, fu1.email, fu2.address, fu2.state, fu2.postcode FROM (SELECT DISTINCT id, name, email FROM final_user_address_mview) AS fu1
@@ -56,5 +57,27 @@
 
 		ALTER TABLE orders DROP COLUMN user_address_id;
 
+3. В магазине появляются сотрудники (таблица employees) у сотрудника есть как минимум name, email, salary, role. Роли хранятся в отдельной таблице.
+Также каждый из сотрудников отвечает за одну или несколько категорий товаров. Нужно создать по несколько записей в каждой таблице.
 
+		CREATE TABLE employees (id bigserial PRIMARY KEY, name varchar(150) NOT NULL, email varchar(150) NOT NULL, salary int NOT NULL CHECK (salary >= 0), role_id int NOT NULL CHECK (role_id >= 0));
 
+		CREATE TABLE roles (id serial PRIMARY KEY, name varchar(255) UNIQUE NOT NULL);
+
+		CREATE TABLE employees_categories (employee_id int NOT NULL CHECK (employee_id >= 0) REFERENCES employees (id), category_id int NOT NULL CHECK (category_id >= 0) REFERENCES product_categories (id));
+
+		INSERT INTO roles (name) VALUES ('administrator'), ('manager'), ('seller-consultant');
+
+		INSERT INTO employees (name, email, salary, role_id)
+		VALUES ('Oliver', 'oliver@email.com', 250, 3), ('Isabella', 'isabella@email.com', 270, 3), ('Henry', 'henry@email.com', 260, 3);
+
+		INSERT INTO employees_categories VALUES (1,31), (1,32), (2,30), (3,29);
+
+4. Оказалось, что при наполнении таблицы связывающей сотрудников, и категории товаров произошла ошибка. Очистите таблицу, сбросьте последовательность id, наполните таблицу заново.
+
+		TRUNCATE employees_categories RESTART IDENTITY;
+		
+		BEGIN;
+		INSERT INTO employees_categories VALUES (1,31), (1,32), (2,30), (3,29);
+		COMMIT;
+	
