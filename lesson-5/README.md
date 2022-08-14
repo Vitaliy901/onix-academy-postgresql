@@ -53,8 +53,8 @@
 
 4.  Оказалось, что при наполнении таблицы связывающей сотрудников, и категории товаров произошла ошибка. Очистите таблицу, сбросьте последовательность id, наполните таблицу заново.
 
-TRUNCATE employees_categories RESTART IDENTITY;
+        TRUNCATE employees_categories RESTART IDENTITY;
 
-BEGIN;
-INSERT INTO employees_categories VALUES (1,29), (1,30), (2,31), (2,33), (3,32);
-COMMIT;
+        BEGIN;
+        INSERT INTO employees_categories VALUES (1,29), (1,30), (2,31), (2,33), (3,32);
+        COMMIT;
